@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 # If you later deploy the backend somewhere serverless (Vercel functions, etc.),
 # switch to a hosted Postgres DB (e.g. Neon/Supabase free tier) by setting
 # the DATABASE_URL env var, e.g. postgresql://user:pass@host/dbname
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./donations.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:////data/donations.db")
 
 connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 

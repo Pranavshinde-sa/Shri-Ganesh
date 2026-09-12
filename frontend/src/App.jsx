@@ -21,8 +21,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="max-w-4xl mx-auto px-6 py-8 relative">
-        <header className="flex flex-wrap items-start justify-between gap-4 mb-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 relative">
+        <header className="flex flex-col gap-4 mb-8">
           <div>
             <h1 className="text-2xl font-bold text-brand-dark tracking-tight leading-snug">
               Jay Hanuman Ganeshutsav Mandal
@@ -32,8 +32,8 @@ export default function App() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <nav className="flex gap-2 bg-white p-1 rounded-xl border border-slate-200">
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
+            <nav className="flex gap-2 bg-white p-1 rounded-xl border border-slate-200 w-full">
               <NavLink to="/" end className={tabClass}>Dashboard</NavLink>
               <NavLink to="/donations" className={tabClass}>Donations</NavLink>
               <NavLink to="/expenses" className={tabClass}>Expenses</NavLink>

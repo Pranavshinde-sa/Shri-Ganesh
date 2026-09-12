@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: donation-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - donation_data:/data
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://35.172.225.69:8000
+    container_name: donation-frontend
+    ports:
+      - "80:5173"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  donation_data:

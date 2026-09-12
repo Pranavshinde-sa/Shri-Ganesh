@@ -144,30 +144,30 @@ export default function Expenses() {
           No expenses recorded yet.
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <table className="w-full text-sm">
+	<div className="bg-white rounded-xl border border-slate-200 overflow-x-auto">
+	  <table className="w-full sm:min-w-0 min-w-[500px] text-sm">       
             <thead>
               <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
-                <th className="px-5 py-3 font-medium">Expense</th>
-                <th className="px-5 py-3 font-medium">Amount</th>
-                <th className="px-5 py-3 font-medium">Deducted from</th>
-                <th className="px-5 py-3 font-medium">Date</th>
+                <th className="px-3 sm:px-5 py-3 font-medium">Expense</th>
+                <th className="px-3 sm:px-5 py-3 font-medium">Amount</th>
+                <th className="px-3 sm:px-5 py-3 font-medium">Deducted from</th>
+                <th className="px-3 sm:px-5 py-3 ont-medium">Date</th>
                 {isAdmin && <th className="px-5 py-3"></th>}
               </tr>
             </thead>
             <tbody>
               {expenses.map((ex) => (
                 <tr key={ex.id} className="border-b border-slate-100 last:border-0">
-                  <td className="px-5 py-3">{ex.name}</td>
-                  <td className="px-5 py-3 font-semibold tabular-nums">{fmt(ex.amount)}</td>
-                  <td className="px-5 py-3">
+                  <td className="px-3 sm:px-5 py-3">{ex.name}</td>
+                  <td className="px-3 sm:px-5 py-3 font-semibold tabular-nums">{fmt(ex.amount)}</td>
+                  <td className="px-3 sm:px-5 py-3">
                     <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
                       ex.mode === 'cash' ? 'bg-cash-soft text-cash' : 'bg-online-soft text-online'
                     }`}>{ex.mode}</span>
                   </td>
-                  <td className="px-5 py-3 text-slate-500">{fmtDate(ex.created_at)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-slate-500">{fmtDate(ex.created_at)}</td>
                   {isAdmin && (
-                    <td className="px-5 py-3 text-right">
+                    <td className="px-3 sm:px-5 py-3 text-right">
                       <button onClick={() => handleDelete(ex.id)} className="text-xs text-slate-400 hover:text-red-600 underline">Remove</button>
                     </td>
                   )}
