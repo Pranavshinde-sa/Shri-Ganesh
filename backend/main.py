@@ -24,6 +24,28 @@ from pathlib import Path
 
 FONT_PATH = Path(__file__).resolve().parent / "fonts" / "NotoSansDevanagari-Regular.ttf"
 pdfmetrics.registerFont(TTFont("NotoDevanagari", str(FONT_PATH)))
+_DEVANAGARI_VIRAMA = "\u094D"
+_DEVANAGARI_PRE_BASE_MATRA = "\u093F"
+
+
+def _is_devanagari_consonant(ch: str) -> bool:
+    cp = ord(ch)
+    return (0x0915 <= cp <= 0x0939) or (0x0958 <= cp <= 0x095F)
+
+
+def _fix_devanagari_prebase_matra(text: str) -> str:
+    out = list(text)
+    idx = 0
+    while idx < len(out):
+        if out[idx] == _DEVANAGARI_PRE_BASE_MATRA:
+            j = idx - 1
+            if j >= 0 and _is_devanagari_consonant(out[j]):
+                while j - 2 >= 0 and out[j - 1] == _DEVANAGARI_VIRAMA and _is_devanagari_consonant(out[j - 2]):
+                    j -= 2
+                matra = out.pop(idx)
+                out.insert(j, matra)
+        idx += 1
+    return "".join(out)
 
 Base.metadata.create_all(bind=engine)
 
@@ -169,15 +191,18 @@ def _build_pdf(title: str, headers: list[str], rows: list[list[str]], total_labe
 
     marathi_style = styles["Normal"].clone("Marathi")
     marathi_style.fontName = "NotoDevanagari"
-    marathi_style.shaping = 1
+    marathi_style.fontSize = 10
+    marathi_style.leading = 16
 
     def pdf_text(value):
         text = str(value)
         has_devanagari = any('\u0900' <= char <= '\u097F' for char in text)
 
         if has_devanagari:
-            return Paragraph(text, marathi_style)
-        
+            fixed_text = _fix_devanagari_prebase_matra(text)
+            escaped = fixed_text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            return Paragraph(escaped, marathi_style)
+
         return text
 
     elements.append(Paragraph(title, styles["Title"]))
