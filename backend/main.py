@@ -18,6 +18,12 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from pathlib import Path
+
+FONT_PATH = Path(__file__).resolve().parent / "fonts" / "NotoSansDevanagari-Regular.ttf"
+pdfmetrics.registerFont(TTFont("NotoDevanagari", str(FONT_PATH)))
 
 Base.metadata.create_all(bind=engine)
 
@@ -161,11 +167,24 @@ def _build_pdf(title: str, headers: list[str], rows: list[list[str]], total_labe
     styles = getSampleStyleSheet()
     elements = []
 
+    marathi_style = styles["Normal"].clone("Marathi")
+    marathi_style.fontName = "NotoDevanagari"
+    marathi_style.shaping = 1
+
+    def pdf_text(value):
+        text = str(value)
+        has_devanagari = any('\u0900' <= char <= '\u097F' for char in text)
+
+        if has_devanagari:
+            return Paragraph(text, marathi_style)
+        
+        return text
+
     elements.append(Paragraph(title, styles["Title"]))
     elements.append(Paragraph(f"Generated on {datetime.now().strftime('%d %b %Y, %I:%M %p')}", styles["Normal"]))
     elements.append(Spacer(1, 10 * mm))
 
-    data = [headers] + rows
+    data = data = [headers] + [[pdf_text(cell) for cell in row] for row in rows]
     table = Table(data, repeatRows=1, colWidths=None)
     table.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1F4B43")),
