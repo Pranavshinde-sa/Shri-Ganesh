@@ -148,6 +148,7 @@ export default function Donations() {
           <table className="min-w-[500px] sm:min-w-0 w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
+                <th className="px-3 py-3 font-medium">S.No.</th>
                 <th className="px-3 sm:px-5 py-3 font-medium">Donor</th>
                 <th className="px-3 sm:px-5 py-3 font-medium">Amount</th>
                 <th className="px-3 sm:px-5 py-3 font-medium">Mode</th>
@@ -156,9 +157,10 @@ export default function Donations() {
               </tr>
             </thead>
             <tbody>
-              {donations.map((d) => (
+              {donations.map((d, index) => (
                 <tr key={d.id} className="border-b border-slate-100 last:border-0">
-                  <td className="px-3 sm:px-5 py-3">{d.donor_name}</td>
+                  <td className="px-3 py-3">{index + 1}</td>
+                  <td className="px-3 py-3">{d.donor_name}</td>
                   <td className="px-3 sm:px-5 py-3 font-semibold tabular-nums">{fmt(d.amount)}</td>
                   <td className="px-3 sm:px-5 py-3">
                     <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
